@@ -1,22 +1,23 @@
 package com.example.TDD.services;
 
 import com.example.TDD.entities.User;
+import com.example.TDD.entities.UserDTO;
 import com.example.TDD.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
-    @Autowired
-     private UserRepository userRepository;
+public interface UserService {
+    User findById(Integer id);
+    User saveUser(UserDTO user);
 
-     public User saveUser(User user){
-         return userRepository.save(user);
-    }
+    List<User> findAll();
 
-    public Optional<User> findById(Integer id){
-        return userRepository.findById(id);
-    }
+    User updateUser(UserDTO user);
+
+    void deleteUser(Integer user) ;
 }
