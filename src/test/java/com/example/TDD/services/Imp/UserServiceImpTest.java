@@ -24,7 +24,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceImpTest {
@@ -97,6 +97,7 @@ class UserServiceImpTest {
             serviceImp.saveUser(userDTO);
         }catch (Exception e){
             assertEquals(CantSaveUser.class,e.getClass());
+            assertEquals("Email Already Created!",e.getMessage());
         }
         }
 
@@ -111,15 +112,45 @@ class UserServiceImpTest {
 
     @Test
     void whenUpdateUserReturnSuccess() {
-        when(userRepository.findByEmail(anyString())).thenReturn(optionalUser);
+        when(userRepository.findByEmail(anyString())).thenReturn(optionalUser); //o certo seria usando o metodo save, mas eu por preferencia usei o findByEmail
 
         serviceImp.updateUser(userDTO);
         assertEquals("ramon@hotmaillll",user.getEmail());
     }
 
     @Test
-    void deleteUser() {
+    void whenUpdateReturnError() {
+        when(userRepository.findByEmail(anyString())).thenThrow(new CantSaveUser("Email Already Created!"));;
+
+        try{
+            optionalUser.get().setId(2);
+            serviceImp.saveUser(userDTO);
+        }catch (Exception e){
+            assertEquals(CantSaveUser.class,e.getClass());
+            assertEquals("Email Already Created!",e.getMessage());
+        }
     }
+
+    @Test
+    void whenDeleteReturnSuccess() {
+        when(userRepository.findById(anyInt())).thenReturn(optionalUser);
+        doNothing().when(userRepository).deleteById(anyInt());
+        serviceImp.deleteUser(ID);
+        verify(userRepository,times(1)).deleteById(any());
+    }
+
+    @Test
+    void whenDeleteReturnError() {
+        when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Object Not found!"));
+     try {
+         serviceImp.deleteUser(ID);
+     }catch (Exception e){
+         assertEquals(ObjectNotFoundException.class,e.getClass());
+         assertEquals("Object Not found!",e.getMessage());
+     }
+    }
+
+
 
     private void startUser(){
        user = new User(ID, NAME, EMAIL, PASSWORD);
