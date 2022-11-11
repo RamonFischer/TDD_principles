@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
     private Integer id;
