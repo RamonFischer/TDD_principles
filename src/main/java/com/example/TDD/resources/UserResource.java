@@ -37,7 +37,7 @@ public class UserResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping
+    @GetMapping(value = "/findAll")
     public ResponseEntity<List<UserDTO>> findAll() {
         return ResponseEntity.ok().body(userService.findAll()
                 .stream().map(x -> mapper.map(x, UserDTO.class)).collect(Collectors.toList()));

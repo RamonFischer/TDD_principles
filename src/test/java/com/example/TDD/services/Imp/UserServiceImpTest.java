@@ -14,11 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -112,7 +108,7 @@ class UserServiceImpTest {
 
     @Test
     void whenUpdateUserReturnSuccess() {
-        when(userRepository.findByEmail(anyString())).thenReturn(optionalUser); //o certo seria usando o metodo save, mas eu por preferencia usei o findByEmail
+        when(userRepository.findByEmail(anyString())).thenReturn(optionalUser); // the correct would be "save", but I preferred to use findByEmail
 
         serviceImp.updateUser(userDTO);
         assertEquals("ramon@hotmaillll",user.getEmail());
@@ -120,7 +116,7 @@ class UserServiceImpTest {
 
     @Test
     void whenUpdateReturnError() {
-        when(userRepository.findByEmail(anyString())).thenThrow(new CantSaveUser("Email Already Created!"));;
+        when(userRepository.findByEmail(anyString())).thenThrow(new CantSaveUser("Email Already Created!"));
 
         try{
             optionalUser.get().setId(2);

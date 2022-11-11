@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserResourceTest {
@@ -96,11 +96,27 @@ class UserResourceTest {
     }
 
     @Test
-    void updateUsers() {
+    void whenUpdateUserThenReturnSuccess() {
+      when(serviceImp.updateUser(userDTO)).thenReturn(user);
+      when(mapper.map(any(),any())).thenReturn(userDTO);
+
+      ResponseEntity<UserDTO> response = controller.updateUsers(ID,userDTO);
+
+      assertNotNull(response);
+      assertNotNull(response.getBody());
+      assertEquals(ID,1);
+      assertEquals(EMAIL,response.getBody().getEmail());
     }
 
     @Test
     void deleteUser() {
+        doNothing().when(serviceImp).deleteUser(anyInt());
+
+        ResponseEntity<UserDTO> response = controller.deleteUser(ID);
+
+        assertEquals(HttpStatus.NO_CONTENT,response.getStatusCode());
+        verify(serviceImp,times(1)).deleteUser(anyInt());
+
     }
 
     private void startUser(){
