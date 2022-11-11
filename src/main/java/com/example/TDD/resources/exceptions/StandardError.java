@@ -1,11 +1,12 @@
-package com.example.TDD.resources.Exceptions;
+package com.example.TDD.resources.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class StandardError {
     private LocalDateTime timestamp;

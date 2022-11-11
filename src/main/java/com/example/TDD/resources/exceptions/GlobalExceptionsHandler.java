@@ -1,4 +1,4 @@
-package com.example.TDD.resources.Exceptions;
+package com.example.TDD.resources.exceptions;
 
 import com.example.TDD.services.Exceptions.CantSaveUser;
 import com.example.TDD.services.Exceptions.ObjectNotFoundException;

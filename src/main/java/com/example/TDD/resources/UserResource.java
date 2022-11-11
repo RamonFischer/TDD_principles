@@ -1,18 +1,17 @@
 package com.example.TDD.resources;
 
-import com.example.TDD.entities.User;
 import com.example.TDD.entities.UserDTO;
 import com.example.TDD.services.Imp.UserServiceImp;
-import com.example.TDD.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +20,10 @@ public class UserResource {
 
     @Autowired
     private ModelMapper mapper;
-    private final UserServiceImp userService;
+    @Autowired
+    private  UserServiceImp userService;
+
+    private static final String ID = "/{id}";
 
     @GetMapping(value = "/{id}")
     ResponseEntity<UserDTO> findById(@PathVariable Integer id){
@@ -30,13 +32,17 @@ public class UserResource {
 
     @PostMapping(value = "/saveUser")
     ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO user){
-        return ResponseEntity.ok().body(mapper.map(userService.saveUser(user), UserDTO.class));
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest().path(ID).buildAndExpand(userService.saveUser(user).getId()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @GetMapping(value = "/findAll")
-    ResponseEntity<List<UserDTO>> findAll(){
-        return ResponseEntity.ok().body(userService.findAll().stream().map(__ -> mapper.map(__,UserDTO.class)).toList());
+    public ResponseEntity<List<UserDTO>> findAll() {
+        return ResponseEntity.ok().body(userService.findAll()
+                .stream().map(x -> mapper.map(x, UserDTO.class)).collect(Collectors.toList()));
     }
+
 
     @PutMapping(value = "/updateUser/{id}")
     ResponseEntity<UserDTO> updateUsers(@PathVariable Integer id, @RequestBody UserDTO user){
