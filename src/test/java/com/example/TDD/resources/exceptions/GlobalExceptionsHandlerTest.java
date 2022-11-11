@@ -32,7 +32,7 @@ class GlobalExceptionsHandlerTest {
         assertEquals(StandardError.class,response.getBody().getClass());
         assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
         assertEquals(404,response.getBody().getStatus());
-        assertNotNull(response.getBody().getPath()); //it return Null because you arent access the endPoint
+        assertNotNull(response.getBody().getPath()); //it returns Null because you aren't access the endPoint
     }
 
     @Test
